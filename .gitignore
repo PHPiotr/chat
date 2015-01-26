@@ -1,3 +1,6 @@
+#Netbeans
+/nbproject/
+
 # Logs
 logs
 *.log
