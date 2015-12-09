@@ -1,0 +1,11 @@
+{
+    "name": "chat",
+    "version": "0.0.0",
+    "dependencies": {
+        "mongodb": "*",
+        "socket.io": "*"
+    },
+    "devDependencies": {
+        "tap": "*"
+    }
+}

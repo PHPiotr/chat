@@ -13,7 +13,7 @@
 		if (s !== statusDefault) {
 			var delay = setTimeout(function () {
 				setStatus(statusDefault);
-				clearInterval(delay);
+				clearTimeout(delay);
 			}, 3000);
 		}
 	};
@@ -23,7 +23,7 @@
 		console.log(e.message);
 	}
 	if (socket !== undefined) {
-
+        
 		socket.on('output', function (data) {
 
 			if (data.length) {
