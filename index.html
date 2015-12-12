@@ -1,19 +1,79 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Chat</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href="css/main.css" rel="stylesheet" type="text/css"/>
-	</head>
-	<body>
-		<div class="chat">
-			<input type="text" class="chat-name" placeholder="Enter your name" />
-			<div class="chat-messages"></div>
-			<textarea placeholder="Type your message"></textarea>
-			<div class="chat-status">Status: <span>Idle</span></div>
-		</div>
-		<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
-		<script src="client.js"></script>
-	</body>
+    <head>
+        <title>Chat</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body,
+            textarea,
+            input {
+                font: 13px 'Trebuchet MS', sans-serif;
+            }
+            .chat {
+                max-width: 300px;
+            }
+            .chat-name,
+            .chat textarea {
+                outline: none;
+            }
+            .chat-messages,
+            .chat textarea,
+            .chat-name {
+                border: 1px solid #bbb;
+                margin: 0;
+                padding: 10px;
+                width: 100%;
+            }
+            .chat-name {
+                border-bottom-width: 0;
+            }
+            .chat-messages {
+                overflow-y: scroll;
+                height: 300px;
+            }
+            .chat-status {
+                color: #bbb;
+            }
+            .chat textarea {
+                border-top-width: 0;
+                max-width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="chat">
+            <input type="text" class="chat-name" placeholder="Enter your name" />
+            <div id="messages" class="chat-messages"></div>
+            <textarea id="input" placeholder="Type your message"></textarea>
+            <div class="chat-status">Status: <span>Idle</span></div>
+        </div>
+        <script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
+        <script>
+            var messagesElement = document.getElementById('messages');
+            var lastMessageElement = null;
+            function addMessage(message) {
+                var newMessageElement = document.createElement('div');
+                var newMessageText = document.createTextNode(message);
+                newMessageElement.appendChild(newMessageText);
+                messagesElement.insertBefore(newMessageElement,
+                        lastMessageElement);
+                lastMessageElement = newMessageElement;
+            }
+            var socket = io.connect('http://localhost:8080');
+            socket.on('serverMessage', function (content) {
+                addMessage(content);
+            });
+            var inputElement = document.getElementById('input');
+            inputElement.onkeydown = function (keyboardEvent) {
+                if (keyboardEvent.keyCode === 13) {
+                    socket.emit('clientMessage', inputElement.value);
+                    inputElement.value = '';
+                    return false;
+                } else {
+                    return true;
+                }
+            };
+        </script>
+    </body>
 </html>
